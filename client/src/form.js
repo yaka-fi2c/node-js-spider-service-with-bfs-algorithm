@@ -33,8 +33,6 @@ export default class Form extends Component {
             max_pages: this.state.max_pages
         }
 
-        console.log(params, url)
-
         fetch(url, {
             method: 'POST',
             body: JSON.stringify(params),

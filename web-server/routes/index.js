@@ -1,5 +1,5 @@
 const express = require('express');
-const scrapper = require('../utils/utils');
+const scrape = require('../utils/bfs_search');
 
 const router = express.Router();
 
@@ -9,9 +9,11 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/scrape', (req, res, next) => {
-  let scrapeParams = req.body;
-
-  scrapper(scrapeParams.url, res)
+  let params = req.body;
+  scrape(params.url, params.max_depth, params.max_pages)
+    .then((result) => {
+      res.send(result);
+    });
 });
 
 module.exports = router;
