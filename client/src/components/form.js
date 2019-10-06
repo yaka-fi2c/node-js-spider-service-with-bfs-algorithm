@@ -6,7 +6,11 @@ export default class Form extends Component {
         this.state = {
             url: '',
             max_depth: '',
-            max_pages: ''
+            max_pages: '',
+            fetching: false,
+            fetched: false,
+            error: false,
+            response: []
         }
     }
 
@@ -22,8 +26,13 @@ export default class Form extends Component {
         this.setState({ max_pages: event.target.value });
     }
 
+    passData(result) {
+        this.props.onGetResults(result)
+    }
+
     handleSubmit = e => {
         e.preventDefault();
+        this.setState({ fetching: true })
 
         const url = 'http://localhost:9000/scrape';
 
@@ -42,9 +51,14 @@ export default class Form extends Component {
         })
             .then(res => res.json())
             .then((result) => {
-                console.log(result)
+                this.setState({ fetching: false });
+                this.setState({ fetched: true });
+                this.passData(result);
             })
-            .catch(() => { console.log('something went wrong'); })
+            .catch(() => {
+                this.setState({ error: true });
+                this.setState({ fetching: false });
+            });
     }
 
     render() {
@@ -84,6 +98,15 @@ export default class Form extends Component {
                         onChange={this.handlePagesChange}
                     ></input>
                 </div>
+                {this.state.fetching === true ? (<div className="alert alert-warning mt-3" role="alert">
+                    Fetching data, please wait
+                </div>) : null}
+                {this.state.fetched === true ? (<div className="alert alert-success mt-3" role="alert">
+                    URL scrapped successfully! results page: <a className="font-wegiht-bold">link</a>
+                </div>) : null}
+                {this.state.error === true ? (<div className="alert alert-danger mt-3" role="alert">
+                    Sorry! something went wrong..
+                </div>) : null}
                 <button type="submit" className="btn btn-primary w-50">submit</button>
             </form>
         )

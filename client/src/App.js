@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
-import Form from './form.js'
+import Form from './components/form.js';
+import DataTable from './components/table.js';
+
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = { apiResponse: '' };
+    this.state = { 
+      apiResponse: [] 
+    };
   }
 
-  // callApi() {
-  //   fetch('http://localhost:9000/')
-  //     .then(res => res.text())
-  //     .then(res => this.setState({ apiResponse: res }))
-  //     .catch(err => err)
-  // }
-
-  // componentDidMount() {
-  //   this.callApi();
-  // }
+  dataCallBack = (data) => {
+    this.setState({ apiResponse: [...data]});
+  };
+  
 
   render() {
     return (
@@ -26,9 +24,11 @@ class App extends Component {
           <h1 className="text-center">Spider service task</h1>
         </div>
         <div className="row">
-          <Form />
+          <Form onGetResults={this.dataCallBack}/>
         </div>
-        <p className="App-intro">{this.state.apiResponse}</p>
+        {this.state.apiResponse.length !== 0 ? <div className="row mt-5 mb-5">
+          <DataTable nodes={this.state.apiResponse}/>
+        </div> : null}
       </div>
     )
   }

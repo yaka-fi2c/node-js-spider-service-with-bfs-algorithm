@@ -1,0 +1,51 @@
+table {
+    border: 1px solid #555;
+    width: 100%;
+}
+
+tbody tr {
+    display: none;
+    background-color: gainsboro;
+}
+
+thead tr:hover {
+    cursor: pointer;
+}
+
+thead tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+thead tr {
+    text-align: center;
+}
+
+
+tr:not(last-of-type) {
+    border-bottom: 1px solid #555;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+th {
+    font-weight: normal;
+}
+
+p {
+    margin-bottom: 0;
+    border-top: 1px solid #555;
+    background: rgb(245, 245, 245);
+    padding-left: 10px;
+    text-align: left;
+    font-weight: normal;
+}
+
+li {
+    list-style-type: none;
+}
