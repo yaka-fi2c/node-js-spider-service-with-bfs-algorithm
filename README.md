@@ -11,7 +11,6 @@
  2. create more efficient ui (mostly in design aspect)
  3. set up db to save results
  4. write tests
- 5. handle very large amount of url scraping
  6. handle errors more deeply (what if website from the list i scraped was broken?)
  7. create package json to run both client and server.
  
