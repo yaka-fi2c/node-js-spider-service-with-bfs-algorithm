@@ -33,12 +33,13 @@ const scrape = async (baseUrl, max_depth, max_pages) => {
                 );
                 const title = await page.title();
                 // construct new object from page props
-                scrapedData.push(new NodeLink(
-                    title,
-                    depth,
-                    base,
-                    links
-                ));
+                    scrapedData.push(new NodeLink(
+                        title,
+                        depth,
+                        base,
+                        [...new Set(links)]
+                    ));
+
                 await browser.close();
 
                 for (let link of links) {

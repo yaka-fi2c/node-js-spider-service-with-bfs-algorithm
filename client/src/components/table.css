@@ -20,6 +20,10 @@ thead tr {
     text-align: center;
 }
 
+th {
+    border-right: 1px solid #555;
+}
+
 
 tr:not(last-of-type) {
     border-bottom: 1px solid #555;

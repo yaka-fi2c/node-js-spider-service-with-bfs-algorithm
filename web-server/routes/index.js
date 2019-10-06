@@ -10,6 +10,7 @@ router.get('/', (req, res, next) => {
 
 router.post('/scrape', (req, res, next) => {
   let params = req.body;
+  console.log(params)
   scrape(params.url, params.max_depth, params.max_pages)
     .then((result) => {
       res.send(result);

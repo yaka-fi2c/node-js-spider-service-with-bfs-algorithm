@@ -10,29 +10,24 @@ export default class Form extends Component {
             fetching: false,
             fetched: false,
             error: false,
-            response: []
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+    // get inputs value 
+    handleInputChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     }
 
-    handleUrlChange = event => {
-        this.setState({ url: event.target.value });
-    }
-
-    handleDepthChange = event => {
-        this.setState({ max_depth: event.target.value });
-    }
-
-    handlePagesChange = event => {
-        this.setState({ max_pages: event.target.value });
-    }
-
+    // pass data to parent component
     passData(result) {
         this.props.onGetResults(result)
     }
 
     handleSubmit = e => {
         e.preventDefault();
-        this.setState({ fetching: true })
+        this.setState({ fetching: true, fetched: false, error: false })
 
         const url = 'http://localhost:9000/scrape';
 
@@ -51,63 +46,62 @@ export default class Form extends Component {
         })
             .then(res => res.json())
             .then((result) => {
-                this.setState({ fetching: false });
-                this.setState({ fetched: true });
+                this.setState({ fetching: false, fetched: true });
                 this.passData(result);
             })
             .catch(() => {
-                this.setState({ error: true });
-                this.setState({ fetching: false });
+                this.setState({ error: true, fetching: false });
             });
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit} className="col-6 p-0">
+            <form onSubmit={this.handleSubmit} className="col-lg-6 col-md-12 p-0">
+
                 <div className="form-group">
                     <label
                         className="text-monospace font-weight-bold"
                         htmlFor="url">URL:</label>
+                    <small className="ml-3 text-muted">
+                        please start your url with http://
+                    </small>
                     <input
                         name="url"
                         id="url"
                         type="text"
                         className="form-control mb-3"
-                        onChange={this.handleUrlChange}
+                        onChange={this.handleInputChange}
                     ></input>
                     <label
                         className="text-monospace font-weight-bold"
                         htmlFor="depth"
                     >Max Depth:</label>
                     <input
-                        name="depth"
+                        name="max_depth"
                         id="depth"
                         type="number"
                         className="form-control mb-3"
-                        onChange={this.handleDepthChange}
+                        onChange={this.handleInputChange}
                     ></input>
                     <label
                         className="text-monospace font-weight-bold"
                         htmlFor="pages"
                     >Max Pages:</label>
                     <input
-                        name="pages"
+                        name="max_pages"
                         id="pages"
                         type="number"
                         className="form-control"
-                        onChange={this.handlePagesChange}
+                        onChange={this.handleInputChange}
                     ></input>
                 </div>
                 {this.state.fetching === true ? (<div className="alert alert-warning mt-3" role="alert">
-                    Fetching data, please wait
-                </div>) : null}
-                {this.state.fetched === true ? (<div className="alert alert-success mt-3" role="alert">
-                    URL scrapped successfully! results page: <a className="font-wegiht-bold">link</a>
+                    Fetching data, it might take some time..
                 </div>) : null}
                 {this.state.error === true ? (<div className="alert alert-danger mt-3" role="alert">
                     Sorry! something went wrong..
                 </div>) : null}
-                <button type="submit" className="btn btn-primary w-50">submit</button>
+                <button type="submit" className="btn btn-primary w-100">submit</button>
             </form>
         )
     }
