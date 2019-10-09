@@ -4,11 +4,11 @@ export default class Form extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            apiUrl: 'http://localhost:9000/scrape',
             url: '',
             max_depth: '',
             max_pages: '',
             fetching: false,
-            fetched: false,
             error: false,
         }
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -25,11 +25,23 @@ export default class Form extends Component {
         this.props.onGetResults(result)
     }
 
-    handleSubmit = e => {
-        e.preventDefault();
-        this.setState({ fetching: true, fetched: false, error: false })
+    async fetchData(params) {
+        const response = await fetch(this.state.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
 
-        const url = 'http://localhost:9000/scrape';
+        const data = await response.json();
+        return data;
+    }
+
+    // get parameters from user and handle request
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.setState({ fetching: true, error: false })
 
         const params = {
             url: this.state.url,
@@ -37,26 +49,19 @@ export default class Form extends Component {
             max_pages: this.state.max_pages
         }
 
-        fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: {
-                'Content-type': 'application/json'
-            }
-        })
-            .then(res => res.json())
+        this.fetchData(params)
             .then((result) => {
-                this.setState({ fetching: false, fetched: true });
+                this.setState({ fetching: false });
                 this.passData(result);
             })
-            .catch(() => {
+            .catch((err) => {
                 this.setState({ error: true, fetching: false });
             });
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit} className="col-lg-6 col-md-12 p-0">
+            <form onSubmit={this.handleSubmit} className="p-0">
 
                 <div className="form-group">
                     <label

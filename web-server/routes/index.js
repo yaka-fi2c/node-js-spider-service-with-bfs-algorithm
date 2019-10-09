@@ -1,20 +1,19 @@
 const express = require('express');
-const scrape = require('../utils/bfs_search');
-
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', (req, res, next) => {
-  res.send('got request');
-});
+const scrape = require('../utils/bfs_search');
 
 router.post('/scrape', (req, res, next) => {
-  let params = req.body;
-  console.log(params)
-  scrape(params.url, params.max_depth, params.max_pages)
+  // remove default time out of 2 minutes
+  req.setTimeout(0);
+  // decunstruct params from the request
+  let { url, max_depth, max_pages } = req.body;
+  // run BFS algorithm function and send back to the client
+  scrape(url, max_depth, max_pages)
     .then((result) => {
       res.send(result);
-    });
+    })
+    .catch(err => res.send(err));
 });
 
 module.exports = router;

@@ -11,6 +11,7 @@ export default class DataTable extends Component {
         };
     }
 
+    // show row details upon clicking
     showRow(i) {
         if (this.state.currentRow === i) {
             this.setState({ currentRow: null });

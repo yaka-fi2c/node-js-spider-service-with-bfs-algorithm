@@ -1,18 +1,15 @@
-const puppeteer = require('puppeteer'),
-    NodeLink = require('./node-link');
-
+const puppeteer = require('puppeteer');
 
 const scrape = async (baseUrl, max_depth, max_pages) => {
     // set initial state of scraping
-    let visited = [baseUrl];
-    let q = [{ url: visited[0], path: '', depth: 0 }]
-    let scrapedData = [];
+    const visited = [baseUrl];
+    const q = [{ url: visited[0], path: '', depth: 0 }]
+    const scrapedData = [];
 
     // loop over queue of pages
     while (q.length > 0) {
-        let base = q[0].url;
-        let path = q[0].path;
-        let depth = q[0].depth;
+        // deconstruct parameters from the queue.
+        let { url, path, depth } = q[0];
 
         q.shift();
 
@@ -23,7 +20,7 @@ const scrape = async (baseUrl, max_depth, max_pages) => {
                 // run browser proccess
                 const browser = await puppeteer.launch();
                 const [page] = await browser.pages();
-                await page.goto(base + path, { waitUntil: 'load', timeout: 0 });
+                await page.goto(url + path, { waitUntil: 'load', timeout: 0 });
                 // get all href's from page
                 const links = await page.evaluate(
                     () => Array.from(
@@ -33,13 +30,13 @@ const scrape = async (baseUrl, max_depth, max_pages) => {
                 );
                 const title = await page.title();
                 // construct new object from page props
-                    scrapedData.push(new NodeLink(
-                        title,
-                        depth,
-                        base,
-                        [...new Set(links)]
-                    ));
-
+                scrapedData.push({
+                    title: title,
+                    depth: depth,
+                    url: url,
+                    links: [...new Set(links)]
+                });
+                // close current browser proccess after data was gathered
                 await browser.close();
 
                 for (let link of links) {
@@ -50,7 +47,8 @@ const scrape = async (baseUrl, max_depth, max_pages) => {
                         if (link.startsWith('http')) {
                             q.push({ url: link, path: '', depth: depth + 1 });
                         } else {
-                            q.push({ url: base, path: link, depth: depth + 1 });
+                            // if it has no http, connect the relative path to base url
+                            q.push({ url: url, path: link, depth: depth + 1 });
                         }
                     }
                 }

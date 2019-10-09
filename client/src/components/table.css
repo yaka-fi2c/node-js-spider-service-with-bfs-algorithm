@@ -12,16 +12,17 @@ thead tr:hover {
     cursor: pointer;
 }
 
-thead tr:nth-child(odd) {
-    background-color: #eee;
-}
-
 thead tr {
     text-align: center;
 }
 
+thead tr:nth-child(odd) {
+    background-color: #eee;
+}
+
 th {
     border-right: 1px solid #555;
+    font-weight: normal;
 }
 
 
@@ -35,10 +36,6 @@ tr:not(last-of-type) {
 
 .hide {
     display: none;
-}
-
-th {
-    font-weight: normal;
 }
 
 p {
