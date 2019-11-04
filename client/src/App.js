@@ -40,7 +40,7 @@ class App extends Component {
     return (
       <div className="container pt-5 pb-5">
         <div className="row">
-          <h1 className="text-center">Spider service task <img src="https://media.licdn.com/dms/image/C561BAQEow7bTVyn_fg/company-background_10000/0?e=2159024400&v=beta&t=C08eU5v2uALRl1flmM0YZYvMkboiv6nYLU4yG2EhrxE" alt="logo"></img></h1>
+          <h1 className="text-center">Spider service</h1>
         </div>
         <Router>
           <div className="row">
